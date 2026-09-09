@@ -1,0 +1,5 @@
+.range-picker { display: flex; align-items: center; gap: 8px; }
+.range-picker .input { width: 150px; padding: 8px 10px; }
+.month-group { margin-bottom: 26px; }
+.month-title { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin-bottom: 10px; }
+@media (max-width: 768px) { .range-picker { width: 100%; } .range-picker .input { flex: 1; width: auto; min-width: 0; } }
