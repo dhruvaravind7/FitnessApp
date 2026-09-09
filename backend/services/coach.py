@@ -5,6 +5,7 @@ pulls exactly the data it needs (google-genai runs the tool-call loop automatica
 """
 import asyncio
 import logging
+from datetime import date as Date
 
 from fastapi import HTTPException
 from google import genai
@@ -13,7 +14,7 @@ from mcp.shared.memory import create_connected_server_and_client_session
 
 from config import get_settings
 from db import get_conn
-from mcp_server import current_user_id, mcp
+from mcp_server import current_today, current_user_id, mcp
 
 log = logging.getLogger("fitcoach.coach")
 
@@ -46,9 +47,10 @@ def _history_to_contents(messages: list[dict]) -> list[types.Content]:
     return [types.Content(role=m["role"], parts=[types.Part(text=m["content"])]) for m in messages]
 
 
-async def generate_reply(user_id: int, history: list[dict]) -> str:
+async def generate_reply(user_id: int, history: list[dict], today: Date | None = None) -> str:
     """`history` is the full ordered message list (role/content) ending with the new user message."""
     token = current_user_id.set(user_id)
+    today_token = current_today.set(today)
     try:
         async with create_connected_server_and_client_session(mcp) as session:
             config = types.GenerateContentConfig(
@@ -70,6 +72,7 @@ async def generate_reply(user_id: int, history: list[dict]) -> str:
                 raise HTTPException(status_code=502, detail=f"AI coach error: {exc.__class__.__name__}: {str(exc)[:200]}")
     finally:
         current_user_id.reset(token)
+        current_today.reset(today_token)
     text = (response.text or "").strip()
     return text or "I couldn't come up with a response. Could you rephrase your question?"
 
@@ -116,11 +119,11 @@ def _add_message(conn, conversation_id: int, role: str, content: str) -> dict:
                         (conversation_id, role, content)).fetchone()
 
 
-async def send_message(user_id: int, conversation_id: int, content: str) -> dict:
+async def send_message(user_id: int, conversation_id: int, content: str, today: Date | None = None) -> dict:
     conv = get_conversation(user_id, conversation_id)
     history = [{"role": m["role"], "content": m["content"]} for m in conv["messages"]]
     history.append({"role": "user", "content": content})
-    reply = await generate_reply(user_id, history)
+    reply = await generate_reply(user_id, history, today)
     with get_conn() as conn:
         with conn.transaction():
             user_msg = _add_message(conn, conversation_id, "user", content)

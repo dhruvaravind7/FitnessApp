@@ -42,7 +42,7 @@ export default function ActiveSessionBar() {
         <span className="pulse"><Flame size={16} /></span>
         <span className="active-bar-name">{active.name || 'Workout in progress'}</span>
         <span className="active-bar-meta">
-          {pluralize(active.exercise_count, 'exercise')} · {formatDuration(active.started_at)}
+          {pluralize(active.exercise_count, 'exercise')} · {formatDuration(active.started_at) || 'just started'}
         </span>
       </Link>
       <div className="active-bar-actions">

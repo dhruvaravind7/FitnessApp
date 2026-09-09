@@ -120,7 +120,7 @@ export default function Search() {
       <div className="search-bar">
         <SearchIcon size={18} className="search-bar-icon" />
         <input
-          className="input" type="search" placeholder="Search by name, e.g. bench press, squat, plank…"
+          className="input" type="text" placeholder="Search by name, e.g. bench press, squat, plank…"
           value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search exercises"
         />
         {query && <button className="search-clear" onClick={() => setQuery('')} aria-label="Clear search"><X size={16} /></button>}

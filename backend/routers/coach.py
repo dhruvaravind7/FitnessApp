@@ -29,4 +29,4 @@ def delete_conversation(conversation_id: int, user: dict = Depends(get_current_u
 
 @router.post("/conversations/{conversation_id}/messages", response_model=ChatResponse)
 async def send_message(conversation_id: int, body: MessageIn, user: dict = Depends(get_current_user)):
-    return await coach.send_message(user["id"], conversation_id, body.content.strip())
+    return await coach.send_message(user["id"], conversation_id, body.content.strip(), body.today)

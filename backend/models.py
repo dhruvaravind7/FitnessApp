@@ -125,6 +125,7 @@ class ConversationOut(BaseModel):
 
 class MessageIn(BaseModel):
     content: str = Field(min_length=1, max_length=8000)
+    today: Date | None = None  # client's local date so "today"/"this week" resolve in the user's timezone
 
 
 class MessageOut(BaseModel):

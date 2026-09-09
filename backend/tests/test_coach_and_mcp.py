@@ -9,7 +9,7 @@ import services.coach as coach_service
 from mcp_server import current_user_id, mcp
 
 
-async def fake_generate_reply(user_id: int, history: list[dict]) -> str:
+async def fake_generate_reply(user_id: int, history: list[dict], today=None) -> str:
     token = current_user_id.set(user_id)
     try:
         async with create_connected_server_and_client_session(mcp) as session:
