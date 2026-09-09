@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     # Server
     port: int = 8000
-    frontend_origin: str = "http://localhost:5173"
+    frontend_origin: str = "http://localhost:5173,http://127.0.0.1:5173"
 
     @property
     def conninfo(self) -> str:

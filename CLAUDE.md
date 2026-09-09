@@ -76,6 +76,8 @@ frontend/src/
 - Tools: `get_today`, `get_recent_sessions`, `get_session`, `get_active_session`, `get_exercise_history`,
   `get_exercise_progress`, `get_personal_records`, `get_weekly_summary`, `get_muscle_group_breakdown`, `search_exercises`.
   Add new tools in `mcp_server.py`; reuse `services/*` rather than writing SQL there.
+- `POST /coach/conversations/{id}/messages` accepts `today` (client local date); it is bound to the `current_today`
+  ContextVar so `get_today` and the summary tools resolve "this week" in the user's timezone, not UTC.
 - Model comes from `GEMINI_MODEL` (default `gemini-3.1-flash-lite-preview`). Check `client.models.list()` if it 404s.
 
 ## Frontend conventions

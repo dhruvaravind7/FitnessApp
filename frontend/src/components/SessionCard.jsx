@@ -52,7 +52,7 @@ export default function SessionCard({ session, defaultOpen = false, onEditSessio
             <span className="dot" />
             <span>{pluralize(session.exercise_count, 'exercise')}</span>
             {session.total_volume > 0 && <><span className="dot" /><span className="mono">{unit.volume(session.total_volume)}</span></>}
-            {session.ended_at && <><span className="dot" /><span>{formatDuration(session.started_at, session.ended_at)}</span></>}
+            {session.ended_at && formatDuration(session.started_at, session.ended_at) && <><span className="dot" /><span>{formatDuration(session.started_at, session.ended_at)}</span></>}
             {isActive && <span className="tag accent">In progress</span>}
           </div>
         </div>

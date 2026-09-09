@@ -6,7 +6,7 @@ from the bearer JWT (see main.py). Both share this single FastMCP instance.
 """
 import json
 from contextvars import ContextVar
-from datetime import date as Date, datetime, timezone, timedelta
+from datetime import date as Date, datetime, timedelta
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
@@ -15,6 +15,12 @@ from mcp.server.transport_security import TransportSecuritySettings
 from services import exercisedb, stats, workouts
 
 current_user_id: ContextVar[int | None] = ContextVar("current_user_id", default=None)
+# The client's local date (set per request); falls back to the server's local date.
+current_today: ContextVar[Date | None] = ContextVar("current_today", default=None)
+
+
+def _today() -> Date:
+    return current_today.get() or datetime.now().astimezone().date()
 
 mcp = FastMCP(
     "FitCoach",
@@ -56,9 +62,9 @@ def _compact_session(s: dict) -> dict:
 @mcp.tool()
 def get_today() -> str:
     """Return today's date (ISO) and weekday so relative phrases like 'this week' can be resolved."""
-    now = datetime.now(timezone.utc)
-    return _json({"today": now.date().isoformat(), "weekday": now.strftime("%A"),
-                  "week_start_monday": (now.date() - timedelta(days=now.weekday())).isoformat()})
+    today = _today()
+    return _json({"today": today.isoformat(), "weekday": today.strftime("%A"),
+                  "week_start_monday": (today - timedelta(days=today.weekday())).isoformat()})
 
 
 @mcp.tool()
@@ -66,7 +72,7 @@ def get_recent_sessions(days: int = 30, limit: int = 20) -> str:
     """List the user's finished workout sessions from the last `days` days (newest first), each with its exercises,
     sets, reps and weight in lbs. Use this to see what the user has actually trained recently."""
     days = max(1, min(days, 365)); limit = max(1, min(limit, 100))
-    since = Date.today() - timedelta(days=days)
+    since = _today() - timedelta(days=days)
     sessions = workouts.list_sessions(_uid(), date_from=since, limit=limit)
     sessions = [s for s in sessions if s["ended_at"] is not None]
     return _json({"since": since.isoformat(), "count": len(sessions), "sessions": [_compact_session(s) for s in sessions]})
@@ -115,7 +121,7 @@ def get_weekly_summary(weeks: int = 4) -> str:
     """Training overview: sessions this week/month, volume, streak, last session and per-week volume for the
     last `weeks` weeks (max 8)."""
     weeks = max(1, min(weeks, 8))
-    o = stats.overview(_uid())
+    o = stats.overview(_uid(), today=_today())
     o["weekly_volume"] = o["weekly_volume"][-weeks:]
     return _json(o)
 
@@ -124,7 +130,7 @@ def get_weekly_summary(weeks: int = 4) -> str:
 def get_muscle_group_breakdown(days: int = 30) -> str:
     """Sets and volume per target muscle and per body part over the last `days` days. Use it to spot
     imbalances or neglected muscle groups."""
-    return _json(stats.muscle_breakdown(_uid(), days=max(1, min(days, 365))))
+    return _json(stats.muscle_breakdown(_uid(), days=max(1, min(days, 365)), today=_today()))
 
 
 @mcp.tool()

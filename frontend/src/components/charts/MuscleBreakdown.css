@@ -1,0 +1,6 @@
+.muscle-bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.muscle-bar-row { display: grid; grid-template-columns: minmax(110px, 38%) 1fr auto; align-items: center; gap: 12px; font-size: 0.85rem; }
+.muscle-bar-label { color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.muscle-bar-track { height: 10px; border-radius: 6px; background: var(--surface-3); overflow: hidden; }
+.muscle-bar-fill { display: block; height: 100%; border-radius: 6px; transition: width 0.4s ease-out; }
+.muscle-bar-value { white-space: nowrap; font-size: 0.82rem; }

@@ -31,11 +31,17 @@ export function titleCase(s = '') {
   return s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-export function formatDuration(startIso, endIso) {
-  if (!startIso) return ''
+export function durationMinutes(startIso, endIso) {
+  if (!startIso) return 0
   const start = parseDate(startIso)
   const end = endIso ? parseDate(endIso) : new Date()
-  const mins = Math.max(0, Math.round((end - start) / 60000))
+  return Math.max(0, Math.round((end - start) / 60000))
+}
+
+/** "45 min" / "1h 20m"; returns '' for sub-minute spans (quick logs have start == end). */
+export function formatDuration(startIso, endIso) {
+  const mins = durationMinutes(startIso, endIso)
+  if (mins < 1) return ''
   if (mins < 60) return `${mins} min`
   return `${Math.floor(mins / 60)}h ${mins % 60}m`
 }

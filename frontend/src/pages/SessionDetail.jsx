@@ -94,7 +94,7 @@ export default function SessionDetail() {
       <div className="session-stats">
         <StatCard label="Exercises" value={session.exercise_count} icon={Dumbbell} />
         <StatCard label="Volume" value={unit.volume(session.total_volume)} icon={Weight} />
-        <StatCard label="Duration" value={formatDuration(session.started_at, session.ended_at)} sub={isActive ? 'and counting' : undefined} icon={Clock} />
+        <StatCard label="Duration" value={formatDuration(session.started_at, session.ended_at) || (isActive ? '< 1 min' : 'Quick log')} sub={isActive ? 'and counting' : undefined} icon={Clock} />
         <StatCard label="Muscles hit" value={muscles.length} sub={muscles.slice(0, 2).map(titleCase).join(', ') || '–'} />
       </div>
 
@@ -111,8 +111,8 @@ export default function SessionDetail() {
         )}
       </section>
 
-      <EditEntryModal key={editEntry?.id ?? 'none'} entry={editEntry} onClose={() => setEditEntry(null)} onSave={saveEntry} busy={busy} />
-      <EditSessionModal key={editSession ? `s${session.id}` : 'none'} session={editSession ? session : null} onClose={() => setEditSession(false)} onSave={saveSession} busy={busy} />
+      <EditEntryModal key={`entry-${editEntry?.id ?? 'none'}`} entry={editEntry} onClose={() => setEditEntry(null)} onSave={saveEntry} busy={busy} />
+      <EditSessionModal key={editSession ? `session-${session.id}` : 'session-none'} session={editSession ? session : null} onClose={() => setEditSession(false)} onSave={saveSession} busy={busy} />
       <ConfirmDialog open={Boolean(confirm)} busy={busy} onClose={() => setConfirm(null)} onConfirm={doDelete}
         title={confirm?.type === 'session' ? 'Delete this session?' : 'Remove this exercise?'}
         message={confirm?.type === 'session' ? 'The session and all its exercises will be permanently deleted.' : `${confirm?.target?.exercise_name} will be removed from the session.`} />

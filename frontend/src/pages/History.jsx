@@ -147,8 +147,8 @@ export default function History() {
         </>
       )}
 
-      <EditEntryModal key={editEntry?.id ?? 'none'} entry={editEntry} onClose={() => setEditEntry(null)} onSave={saveEntry} busy={busy} />
-      <EditSessionModal key={editSession?.id ?? 'none'} session={editSession} onClose={() => setEditSession(null)} onSave={saveSession} busy={busy} />
+      <EditEntryModal key={`entry-${editEntry?.id ?? 'none'}`} entry={editEntry} onClose={() => setEditEntry(null)} onSave={saveEntry} busy={busy} />
+      <EditSessionModal key={`session-${editSession?.id ?? 'none'}`} session={editSession} onClose={() => setEditSession(null)} onSave={saveSession} busy={busy} />
       <ConfirmDialog open={Boolean(confirm)} busy={busy} onClose={() => setConfirm(null)} onConfirm={doDelete}
         title={confirm?.type === 'session' ? 'Delete this session?' : 'Remove this exercise?'}
         message={confirm?.type === 'session' ? `“${confirm.target.name || 'Workout'}” and its ${pluralize(confirm.target.exercise_count, 'exercise')} will be permanently deleted.` : `${confirm?.target?.exercise_name} will be removed from the session.`} />
