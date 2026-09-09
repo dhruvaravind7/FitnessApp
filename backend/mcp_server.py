@@ -146,5 +146,13 @@ def search_exercises(query: str = "", body_part: str = "", equipment: str = "", 
     else:
         data = exercisedb.list_exercises(body_part=body_part, equipment=equipment, target_muscle=target_muscle,
                                          exercise_type=exercise_type, limit=limit)["data"]
-    return _json([{"exercise_id": d["exerciseId"], "name": d["name"], "body_parts": d["bodyParts"],
-                   "equipment": d["equipments"], "target_muscles": d["targetMuscles"]} for d in data])
+    # The upstream name-search endpoint returns only id/name/image, so omit fields it left empty
+    # rather than telling the model an exercise targets no muscles.
+    out = []
+    for d in data:
+        item = {"exercise_id": d["exerciseId"], "name": d["name"]}
+        for key, field in (("body_parts", "bodyParts"), ("equipment", "equipments"), ("target_muscles", "targetMuscles")):
+            if d[field]:
+                item[key] = d[field]
+        out.append(item)
+    return _json(out)

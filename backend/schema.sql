@@ -24,7 +24,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_sessions_one_active ON workout_sessions (us
 
 CREATE TABLE IF NOT EXISTS workouts (
     id              SERIAL PRIMARY KEY,
-    user_id         INTEGER REFERENCES users(id),
+    user_id         INTEGER REFERENCES users(id) ON DELETE CASCADE,
     exercise_id     VARCHAR(100) NOT NULL,
     exercise_name   VARCHAR(100) NOT NULL,
     target_muscles  TEXT[] NOT NULL,
@@ -43,6 +43,23 @@ ALTER TABLE workouts ALTER COLUMN exercise_name TYPE VARCHAR(200);
 DELETE FROM workouts WHERE session_id IS NULL;
 ALTER TABLE workouts ALTER COLUMN session_id SET NOT NULL;
 ALTER TABLE workouts ALTER COLUMN user_id SET NOT NULL;
+-- Older databases created workouts.user_id without an ON DELETE rule, which made deleting a user fail.
+DO $$
+DECLARE con_name text;
+BEGIN
+    SELECT c.conname INTO con_name
+    FROM pg_constraint c
+    JOIN pg_class t ON t.oid = c.conrelid
+    JOIN pg_class r ON r.oid = c.confrelid
+    WHERE c.contype = 'f' AND c.conrelid = 'workouts'::regclass AND r.relname = 'users' AND c.confdeltype <> 'c'
+    LIMIT 1;
+    IF con_name IS NOT NULL THEN
+        EXECUTE format('ALTER TABLE workouts DROP CONSTRAINT %I', con_name);
+        ALTER TABLE workouts ADD CONSTRAINT workouts_user_id_fkey
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+    END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_workouts_session ON workouts (session_id);
 CREATE INDEX IF NOT EXISTS idx_workouts_user_date ON workouts (user_id, date DESC);
 CREATE INDEX IF NOT EXISTS idx_workouts_user_exercise ON workouts (user_id, exercise_id);

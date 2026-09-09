@@ -86,3 +86,20 @@ def test_users_are_isolated(client, user, other_user, bench):
                        json={"exerciseDetails": bench, "sets": 1, "reps": 1}).status_code == 404
     assert client.get("/sessions", headers=oh).json() == []
     assert client.get(f"/sessions/{sid}", headers=user["headers"]).json()["name"] == "mine"
+
+
+def test_deleting_a_user_cascades_to_their_data(client, bench):
+    """workouts.user_id must carry ON DELETE CASCADE (older schemas did not)."""
+    from tests.conftest import make_user
+    from db import get_conn
+
+    victim = make_user(client, "cascade")
+    client.post("/sessions/quick-log", headers=victim["headers"],
+                json={"exerciseDetails": bench, "sets": 2, "reps": 5, "weight": 90})
+    conv = client.post("/coach/conversations", headers=victim["headers"], json={}).json()
+
+    with get_conn() as conn:
+        conn.execute("DELETE FROM users WHERE id = %s", (victim["id"],))
+        assert conn.execute("SELECT COUNT(*) n FROM workouts WHERE user_id = %s", (victim["id"],)).fetchone()["n"] == 0
+        assert conn.execute("SELECT COUNT(*) n FROM workout_sessions WHERE user_id = %s", (victim["id"],)).fetchone()["n"] == 0
+        assert conn.execute("SELECT COUNT(*) n FROM coach_conversations WHERE id = %s", (conv["id"],)).fetchone()["n"] == 0
