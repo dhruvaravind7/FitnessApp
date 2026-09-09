@@ -1,0 +1,13 @@
+.active-bar { position: sticky; top: 0; z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 24px;
+  background: linear-gradient(90deg, rgba(200,241,53,0.16), rgba(200,241,53,0.06)); border-bottom: 1px solid rgba(200,241,53,0.3); backdrop-filter: blur(10px); }
+.active-bar-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.active-bar-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.active-bar-meta { color: var(--text-2); font-size: 0.85rem; white-space: nowrap; }
+.active-bar-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.pulse { display: inline-flex; color: var(--accent); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (max-width: 768px) {
+  .active-bar { padding: 8px 12px; flex-wrap: wrap; }
+  .active-bar-meta { display: none; }
+  .active-bar-actions .btn span, .active-bar-actions .btn { font-size: 0.8rem; }
+}

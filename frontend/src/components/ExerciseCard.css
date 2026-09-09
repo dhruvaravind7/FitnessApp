@@ -1,0 +1,8 @@
+.ex-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; }
+.ex-card:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.ex-card-media { aspect-ratio: 4 / 3; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.ex-card-media img { width: 100%; height: 100%; object-fit: cover; }
+.ex-card-media.skeleton { background: var(--surface-2); }
+.ex-card-noimg { color: var(--muted); background: var(--surface-2); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.ex-card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+.ex-card-name { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
