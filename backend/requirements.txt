@@ -1,0 +1,17 @@
+fastapi[standard]>=0.136,<1
+uvicorn[standard]>=0.45,<1
+psycopg[binary]>=3.3,<4
+psycopg-pool>=3.3,<4
+pydantic[email]>=2.13,<3
+pydantic-settings>=2.15,<3
+python-jose[cryptography]>=3.5,<4
+argon2-cffi>=25.1
+python-dotenv>=1.1
+httpx>=0.28,<1
+google-genai>=1.75,<2
+mcp>=1.30,<2
+
+# dev / test
+pytest>=9
+pytest-asyncio>=1
+respx>=0.23
