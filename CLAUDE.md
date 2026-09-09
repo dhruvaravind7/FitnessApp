@@ -99,6 +99,8 @@ frontend/src/
 
 ## Gotchas
 - `backend/.env` holds real secrets and is git-ignored. Update `backend/.env.example` when adding a variable.
-- `schema.sql` must stay idempotent; it runs on every boot. Add columns with `ADD COLUMN IF NOT EXISTS`.
+- `schema.sql` must stay idempotent; it runs on every boot. Add columns with `ADD COLUMN IF NOT EXISTS`, and guard
+  constraint changes with a `DO $$ … END $$` block that checks `pg_constraint` first (see the workouts FK cascade fix).
+- Deleting a user cascades to sessions, workouts and coach conversations; `tests/test_sessions.py` guards that.
 - The DB server's timezone is US/Pacific; timestamps come back with `-07:00`/`-08:00` offsets.
 - Pydantic model fields named `date` need the `Date` alias import (see `models.py`).
