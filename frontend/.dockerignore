@@ -1,0 +1,11 @@
+# Host-built dependencies must not leak into the Linux image — they are reinstalled
+# by `npm ci`, and an anonymous volume keeps the container's copy at runtime.
+node_modules/
+
+dist/
+coverage/
+.env
+.env.local
+
+Dockerfile
+.dockerignore

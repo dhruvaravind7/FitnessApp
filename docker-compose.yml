@@ -1,0 +1,46 @@
+# FitCoach — local development stack.
+#
+# Postgres is NOT a service here: the backend connects to the Postgres you already run,
+# configured through backend/.env (see backend/.env.example). Run
+# `cp backend/.env.example backend/.env` and fill it in before `docker compose up --build`.
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    # Local-only override of the image's CMD, adding --reload. The image itself ships the
+    # production command so Railway can run it unchanged; hot reload is a dev concern.
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    # pydantic-settings reads real environment variables first; the bind mount below also
+    # puts .env at /app/.env, so config.py finds it either way.
+    env_file:
+      - ./backend/.env
+    volumes:
+      # Live reload: uvicorn --reload watches this mount.
+      - ./backend:/app
+    healthcheck:
+      # /health runs a real SELECT 1 through the pool, so this proves the hosted DB is
+      # reachable. Uses python because python:3.12-slim ships no curl or wget.
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # The browser runs on the host, so the API is reached on the published port.
+      # This must NOT be http://backend:8000 — that name only resolves inside the network.
+      VITE_API_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      # Anonymous volume: keeps the container's npm ci output from being shadowed
+      # by the bind mount above (the host has no node_modules for Linux).
+      - /app/node_modules
+    depends_on:
+      - backend
