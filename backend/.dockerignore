@@ -1,0 +1,19 @@
+# Secrets: .env reaches the container via compose env_file + the bind mount,
+# so it never needs to be baked into an image layer.
+.env
+.env.local
+
+# Host virtualenv and Python build artefacts
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Tests run on the host (or via the bind mount); they don't belong in the image.
+tests/
+
+Dockerfile
+.dockerignore

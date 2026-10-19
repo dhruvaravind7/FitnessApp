@@ -4,11 +4,18 @@ Personal fitness app: search an exercise database, log workouts as sessions, tra
 AI coach that reads the user's real training data through an MCP server.
 
 ## Stack
-- **Backend** (`backend/`): Python 3.12, FastAPI, psycopg 3 + `psycopg_pool`, hosted Postgres (SSL), argon2 password
+- **Backend** (`backend/`): Python 3.12, FastAPI, psycopg 3 + `psycopg_pool`, Supabase Postgres (SSL), argon2 password
   hashing, `python-jose` JWTs, `httpx` → ExerciseDB (RapidAPI), `google-genai` (Gemini) + `mcp` (FastMCP).
 - **Frontend** (`frontend/`): Vite 8, React 19, react-router 7, axios, recharts, react-markdown, lucide-react, date-fns.
   Plain CSS with design tokens (dark theme only). Tests: Vitest + Testing Library.
-- No Docker. `postgres/init.sql` is a copy of `backend/schema.sql` for bootstrapping a fresh DB by hand.
+- **Docker** (optional locally): `docker-compose.yml` + a Dockerfile per service run the same two processes in
+  containers with the source bind-mounted, so `uvicorn --reload` and Vite HMR work as they do on the host.
+  Postgres is not a service — the DB is Supabase. Running on the host as below stays fully supported.
+  The **backend image is also the production artifact** (Railway): its `CMD` is shell form
+  (`uvicorn … --port ${PORT:-8000}`) so a PaaS-injected `$PORT` expands, and compose overrides it with a
+  `command:` adding `--reload`. That one line is the entire dev/prod difference — there is no second Dockerfile.
+  `frontend/Dockerfile` is local-only; Vercel builds the SPA from source and ignores Docker.
+- `postgres/init.sql` is a copy of `backend/schema.sql` for bootstrapping a fresh DB by hand.
 
 ## Run it
 ```bash
@@ -20,6 +27,11 @@ cp .env.example .env            # fill in values
 # frontend (from frontend/)
 npm install
 npm run dev                     # http://localhost:5173 (VITE_API_URL defaults to http://localhost:8000)
+```
+Or, with Docker (from the repo root, after `cp backend/.env.example backend/.env`):
+```bash
+docker compose up --build       # backend :8000, frontend :5173
+docker compose exec backend python -m pytest    # tests/ is .dockerignored; reaches the container via the mount
 ```
 Tests: `cd backend && .venv/bin/pytest` · `cd frontend && npm run lint && npm test && npm run build`.
 
@@ -98,9 +110,21 @@ frontend/src/
 - Frontend tests mock `api/*` modules with `vi.mock` and render through `src/test/utils.jsx` (`renderWithProviders`).
 
 ## Gotchas
-- `backend/.env` holds real secrets and is git-ignored. Update `backend/.env.example` when adding a variable.
+- `backend/.env` holds real secrets and is git-ignored, so it never reaches GitHub, Railway or Vercel —
+  production values are set in each platform's dashboard. Update `backend/.env.example` when adding a variable.
+- Supabase must be reached through the **session pooler** (`aws-0-<region>.pooler.supabase.com:5432`,
+  user `postgres.<project-ref>`, db `postgres`). The direct host `db.<ref>.supabase.co` is IPv6-only and
+  unreachable from networks without IPv6 egress. Transaction mode (6543) would break psycopg's prepared
+  statements. Full notes in `backend/.env.example`.
 - `schema.sql` must stay idempotent; it runs on every boot. Add columns with `ADD COLUMN IF NOT EXISTS`, and guard
   constraint changes with a `DO $$ … END $$` block that checks `pg_constraint` first (see the workouts FK cascade fix).
 - Deleting a user cascades to sessions, workouts and coach conversations; `tests/test_sessions.py` guards that.
-- The DB server's timezone is US/Pacific; timestamps come back with `-07:00`/`-08:00` offsets.
+- The DB server's timezone is **UTC** (Supabase); timestamps come back with a `+00:00` offset. It was
+  US/Pacific (`-07:00`/`-08:00`) before the move, so don't trust hardcoded offsets in older code or notes.
+  This is exactly why the stats and coach endpoints take the client's local date (`?today=`, and the
+  `current_today` ContextVar) instead of deriving "this week" from the server clock.
 - Pydantic model fields named `date` need the `Date` alias import (see `models.py`).
+- `config.py` sets `env_file=".env"`, a path resolved against the **process CWD**, and the backend imports flat
+  (`import db`). Both mean the server must run with `backend/` as the working directory — hence `WORKDIR /app` in
+  `backend/Dockerfile`. Changing that WORKDIR silently breaks `.env` loading, which then fails as a missing required
+  field at import time.
