@@ -32,6 +32,7 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --sidebar-w: 232px;
+  --sidebar-w-collapsed: 64px;
   --content-max: 1200px;
   --space-1: 4px;
   --space-2: 8px;
