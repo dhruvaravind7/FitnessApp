@@ -59,3 +59,22 @@ def test_stats_empty_user(client, user):
     o = client.get("/stats/overview", headers=user["headers"]).json()
     assert o["total_sessions"] == 0 and o["current_streak"] == 0 and o["last_session"] is None
     assert client.get("/stats/exercises/none/progress", headers=user["headers"]).json()["points"] == []
+
+
+def test_progress_keeps_two_sessions_logged_on_the_same_day(client, user, bench):
+    """Regression: exercise_progress grouped by date alone, so a second session on the same
+    day was folded into the first and only its MAX() weight survived. The coach could then
+    only see the heavier entry and reported a single session."""
+    h = user["headers"]
+    today = date.today()
+    log(client, h, bench, today, 3, 10, 125)
+    log(client, h, bench, today, 3, 10, 130)
+
+    p = client.get("/stats/exercises/exr_bench/progress", headers=h).json()
+    assert len(p["points"]) == 2, "same-day sessions must stay separate points"
+    assert p["sessions"] == 2, "`sessions` must count sessions, not distinct dates"
+    # Chronological, and the lighter first entry is still visible rather than absorbed.
+    assert [pt["max_weight"] for pt in p["points"]] == [125, 130]
+    assert [pt["sets"] for pt in p["points"]] == [3, 3]
+    assert len({pt["session_id"] for pt in p["points"]}) == 2
+    assert p["best_weight"] == 130

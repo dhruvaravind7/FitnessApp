@@ -187,7 +187,7 @@ export default function ExerciseDetail() {
                 <ProgressChart points={progress.points} />
                 <div className="history-mini">
                   {progress.points.slice(-5).reverse().map((p) => (
-                    <div key={p.date} className="history-mini-row">
+                    <div key={p.session_id ?? p.date} className="history-mini-row">
                       <span className="muted">{formatDate(p.date, 'MMM d')}</span>
                       <span>{p.sets} sets · up to {p.max_reps} reps</span>
                       <span className="mono">{p.max_weight != null ? unit.weight(p.max_weight) : 'Bodyweight'}</span>

@@ -109,17 +109,24 @@ def muscle_breakdown(user_id: int, days: int = 30, today: Date | None = None) ->
 def exercise_progress(user_id: int, exercise_id: str) -> dict:
     with get_conn() as conn:
         rows = conn.execute(
-            f"""SELECT w.date, MAX(w.weight) AS max_weight, COALESCE(SUM({VOLUME}),0) AS volume,
+            # One point per session, not per date: two sessions on the same day are two
+            # separate data points. Grouping by date alone merged them, so a second workout
+            # vanished into the first's MAX() and the coach only ever saw the heavier entry.
+            f"""SELECT w.date, w.session_id, MAX(w.weight) AS max_weight, COALESCE(SUM({VOLUME}),0) AS volume,
                        SUM(w.sets) AS sets, MAX(w.reps) AS max_reps,
                        MAX(COALESCE(w.weight,0) * (1 + w.reps / 30.0)) AS est_1rm,
                        MIN(w.exercise_name) AS exercise_name
-                FROM workouts w WHERE w.user_id = %s AND w.exercise_id = %s GROUP BY w.date ORDER BY w.date""",
+                FROM workouts w WHERE w.user_id = %s AND w.exercise_id = %s
+                GROUP BY w.date, w.session_id ORDER BY w.date, MIN(w.created_at)""",
             (user_id, exercise_id)).fetchall()
-    points = [{"date": r["date"].isoformat(), "max_weight": _f(r["max_weight"]) if r["max_weight"] is not None else None,
+    points = [{"date": r["date"].isoformat(), "session_id": r["session_id"],
+               "max_weight": _f(r["max_weight"]) if r["max_weight"] is not None else None,
                "volume": _f(r["volume"]), "sets": int(r["sets"] or 0), "max_reps": int(r["max_reps"] or 0),
                "est_1rm": round(_f(r["est_1rm"]), 1)} for r in rows]
     best_w = max((p["max_weight"] or 0) for p in points) if points else 0
     return {"exercise_id": exercise_id, "exercise_name": rows[0]["exercise_name"] if rows else None,
+            # Each point is one session now, so this is a real session count rather than
+            # a count of distinct dates.
             "points": points, "sessions": len(points),
             "best_weight": best_w or None, "best_est_1rm": max((p["est_1rm"] for p in points), default=0) or None}
 
