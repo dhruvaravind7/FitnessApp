@@ -65,6 +65,11 @@ frontend/src/
 - **Weights are stored in lbs** (`NUMERIC(6,2)`). The frontend converts to/from kg via `UnitContext`; the API never sees kg.
 - **Volume** = sets × reps × weight(lbs); bodyweight entries (weight NULL) contribute 0 volume but still count sets.
 - Stats endpoints accept `?today=YYYY-MM-DD` so week/streak math uses the client's local date.
+- **Anything that writes or interprets a date must carry the client's local date.** The DB is UTC, so
+  `CURRENT_DATE` server-side is already tomorrow for users behind UTC — a session created in the evening
+  would be dated a day ahead and drop out of the streak. `create_session` falls back to `CURRENT_DATE`
+  only as a last resort; every frontend caller sends `todayISO()` (`lib/format.js`), as `api/sessions.js`,
+  `api/stats.js` and `api/coach.js` all do. Regression test: `api/sessions.test.js`.
 - Every DB query is scoped by `user_id`. Never add an MCP tool or endpoint that takes a user id as input.
 - Session `date` is the source of truth; `PATCH /sessions/{id}` with a new date also re-dates its entries.
 

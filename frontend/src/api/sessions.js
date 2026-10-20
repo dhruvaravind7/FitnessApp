@@ -1,9 +1,13 @@
 import { api } from './client'
+import { todayISO } from '../lib/format'
 
 export const listSessions = (params = {}) => api.get('/sessions', { params }).then((r) => r.data)
 export const getSession = (id) => api.get(`/sessions/${id}`).then((r) => r.data)
 export const getActiveSession = () => api.get('/sessions/active').then((r) => r.data)
-export const startSession = (body = {}) => api.post('/sessions', body).then((r) => r.data)
+// Send the client's local date: the server would otherwise fall back to its own CURRENT_DATE,
+// which is UTC and can already be tomorrow for users behind it. An explicit body.date still wins.
+export const startSession = (body = {}) =>
+  api.post('/sessions', { date: todayISO(), ...body }).then((r) => r.data)
 export const updateSession = (id, body) => api.patch(`/sessions/${id}`, body).then((r) => r.data)
 export const finishSession = (id) => updateSession(id, { finished: true })
 export const deleteSession = (id) => api.delete(`/sessions/${id}`)
