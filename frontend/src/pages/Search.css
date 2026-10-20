@@ -1,7 +1,7 @@
 .search-bar { position: relative; display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
 .search-bar .input { padding-left: 42px; padding-right: 40px; height: 46px; font-size: 1rem; }
 .search-bar-icon { position: absolute; left: 14px; color: var(--muted); pointer-events: none; }
-.search-clear { position: absolute; right: 140px; border: 0; background: transparent; color: var(--muted); display: inline-flex; padding: 6px; border-radius: 6px; }
+.search-clear { position: absolute; left: 1115px; border: 0; background: transparent; color: var(--muted); display: inline-flex; padding: 6px; border-radius: 6px; }
 .search-clear:hover { color: var(--text); }
 .filter-toggle { display: none; height: 46px; }
 .badge { background: var(--accent); color: var(--accent-fg); border-radius: 999px; font-size: 0.7rem; padding: 1px 7px; font-weight: 800; }
