@@ -2,7 +2,10 @@
   position: fixed; inset: 0 auto 0 0; width: var(--sidebar-w); display: flex; flex-direction: column;
   padding: 20px 14px; background: rgba(15, 21, 29, 0.85); border-right: 1px solid var(--border); backdrop-filter: blur(10px); z-index: 20;
 }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; padding: 6px 10px 22px; letter-spacing: -0.02em; }
+.sidebar-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding-bottom: 22px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; padding: 6px 10px; letter-spacing: -0.02em; min-width: 0; }
+.sidebar-toggle { flex-shrink: 0; color: var(--muted); }
+.sidebar-toggle:hover { color: var(--text); }
 .brand-mark { display: inline-flex; padding: 7px; border-radius: 10px; background: var(--accent); color: var(--accent-fg); }
 .side-nav { display: flex; flex-direction: column; gap: 4px; }
 .side-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius); color: var(--text-2); font-weight: 500; transition: background 0.15s, color 0.15s; }
@@ -17,6 +20,21 @@
 .unit-toggle button { border: 0; background: transparent; color: var(--muted); padding: 3px 10px; border-radius: var(--radius-pill); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; }
 .unit-toggle button.on { background: var(--accent); color: var(--accent-fg); }
 .unit-toggle.compact button { padding: 2px 8px; font-size: 0.72rem; }
+
+/* ---- collapsed icon rail ----
+   .app-shell.sidebar-collapsed redefines --sidebar-w, which both .sidebar (width) and
+   .app-main (margin-left) already read, so the whole layout follows one variable. */
+.app-shell.sidebar-collapsed { --sidebar-w: var(--sidebar-w-collapsed); }
+.sidebar-collapsed .sidebar { padding-left: 8px; padding-right: 8px; }
+.sidebar-collapsed .sidebar-top { flex-direction: column; gap: 10px; padding-bottom: 16px; }
+.sidebar-collapsed .brand { padding: 6px; }
+.sidebar-collapsed .side-nav a { justify-content: center; gap: 0; padding: 10px 0; }
+.sidebar-collapsed .user-chip { flex-direction: column; gap: 6px; padding: 8px 4px; }
+
+.sidebar, .app-main { transition: width 0.18s ease, margin-left 0.18s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .sidebar, .app-main { transition: none; }
+}
 
 .bottom-nav { display: none; }
 @media (max-width: 768px) {
