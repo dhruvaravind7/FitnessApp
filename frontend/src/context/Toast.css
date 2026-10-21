@@ -1,6 +1,6 @@
 .toast-stack { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; max-width: min(380px, calc(100vw - 40px)); }
 .toast { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: var(--radius); background: var(--surface-2);
-  border: 1px solid var(--border-strong); box-shadow: var(--shadow); font-size: 0.9rem; animation: toast-in 0.2s ease-out; }
+  border: 1px solid var(--border-strong); box-shadow: var(--shadow); font-size: 0.9rem; animation: toast-in var(--dur-2) var(--ease-out); }
 .toast span { flex: 1; }
 .toast-success { border-color: rgba(74, 222, 128, 0.4); } .toast-success svg:first-child { color: var(--success); }
 .toast-error { border-color: rgba(248, 113, 113, 0.45); } .toast-error svg:first-child { color: var(--danger); }

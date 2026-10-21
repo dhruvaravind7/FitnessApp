@@ -15,7 +15,7 @@
 .step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 0.8rem; }
 .collapsible { width: 100%; background: none; border: 0; padding: 0; color: inherit; text-align: left; margin-bottom: 0; }
 .collapsible svg.rot { transform: rotate(180deg); }
-.collapsible svg { transition: transform 0.2s; }
+.collapsible svg { transition: transform var(--dur-2) var(--ease-out); }
 .tips { margin: 14px 0 0; padding-left: 18px; color: var(--text-2); display: flex; flex-direction: column; gap: 8px; font-size: 0.92rem; }
 .history-mini { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; }
 .history-mini-row { display: grid; grid-template-columns: 70px 1fr auto; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--bg-elev); }

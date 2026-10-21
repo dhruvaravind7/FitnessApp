@@ -14,7 +14,7 @@
 .chip-btn:hover { background: rgba(200,241,53,0.25); }
 
 .drawer-backdrop { position: fixed; inset: 0; background: rgba(4,7,11,0.7); z-index: 60; display: flex; justify-content: flex-end; }
-.drawer { width: min(360px, 92vw); height: 100%; border-radius: 0; display: flex; flex-direction: column; gap: 14px; overflow: auto; animation: slide-in 0.2s ease-out; }
+.drawer { width: min(360px, 92vw); height: 100%; border-radius: 0; display: flex; flex-direction: column; gap: 14px; overflow: auto; animation: slide-in var(--dur-3) var(--ease-out); }
 @keyframes slide-in { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
 
 @media (max-width: 900px) {

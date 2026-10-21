@@ -1,13 +1,20 @@
 .modal-backdrop { position: fixed; inset: 0; background: rgba(4, 7, 11, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-.modal { width: 100%; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow); max-height: calc(100dvh - 40px); display: flex; flex-direction: column; }
+.modal { animation: modal-in var(--dur-3) var(--ease-out); width: 100%; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: calc(100dvh - 40px); display: flex; flex-direction: column; }
+@keyframes modal-in { from { opacity: 0; transform: scale(0.98) translateY(6px); } to { opacity: 1; transform: none; } }
 .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 0; }
-.modal-body { padding: 16px 20px; overflow: auto; }
+.modal-body { padding: 16px 20px; overflow: auto; overscroll-behavior: contain; }
 .modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 0 20px 18px; }
 
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.stat-card.accent { background: linear-gradient(135deg, rgba(200,241,53,0.18), rgba(200,241,53,0.04)); border-color: rgba(200,241,53,0.35); }
+/* Flat tint, not a gradient: the accent marks this number as notable, it is not scenery. */
+.stat-card.accent { background: var(--accent-soft); border-color: rgba(200, 241, 53, 0.28); }
 .stat-top { display: flex; justify-content: space-between; align-items: center; }
-.stat-label { font-size: 0.78rem; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.04em; }
-.stat-icon { color: var(--accent); display: inline-flex; }
-.stat-value { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.stat-label { font-size: 0.82rem; font-weight: 500; color: var(--muted); }
+/* Reserve the accent for the card that is actually highlighted; elsewhere the icon
+   is a quiet label, not a second focal point competing with the number. */
+.stat-icon { color: var(--muted); display: inline-flex; }
+.stat-card.accent .stat-icon { color: var(--accent); }
+/* The number is the content, so it gets the size. Weight stays moderate — at this
+   scale 800 turns Inter's figures blobby and costs more legibility than it buys. */
+.stat-value { font-size: 1.85rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
 .stat-sub { font-size: 0.8rem; color: var(--muted); }
