@@ -4,8 +4,9 @@
 .active-bar-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .active-bar-meta { color: var(--text-2); font-size: 0.85rem; white-space: nowrap; }
 .active-bar-actions { display: flex; gap: 8px; flex-shrink: 0; }
-.pulse { display: inline-flex; color: var(--accent); animation: pulse 1.6s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+/* Static. The bar only exists while a session is open, so its presence is the signal;
+   a permanently throbbing icon adds motion the user cannot dismiss or act on. */
+.pulse { display: inline-flex; color: var(--accent); }
 @media (max-width: 768px) {
   .active-bar { padding: 8px 12px; flex-wrap: wrap; }
   .active-bar-meta { display: none; }

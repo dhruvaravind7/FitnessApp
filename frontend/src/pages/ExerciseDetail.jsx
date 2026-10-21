@@ -127,7 +127,7 @@ export default function ExerciseDetail() {
           {exercise.videoUrl ? (
             <video src={exercise.videoUrl} poster={exercise.imageUrl} autoPlay loop muted playsInline controls={false} />
           ) : exercise.imageUrl ? (
-            <img src={exercise.imageUrl} alt={exercise.name} />
+            <img src={exercise.imageUrl} alt={exercise.name} fetchPriority="high" decoding="async" />
           ) : null}
         </div>
         <div className="detail-info">

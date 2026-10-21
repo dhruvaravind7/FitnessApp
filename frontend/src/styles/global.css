@@ -9,23 +9,25 @@ body {
   line-height: 1.5;
   color: var(--text);
   background: var(--bg);
-  background-image: radial-gradient(1200px 600px at 80% -10%, rgba(200, 241, 53, 0.07), transparent 60%),
-                    radial-gradient(900px 500px at -10% 110%, rgba(96, 165, 250, 0.06), transparent 60%);
-  background-attachment: fixed;
+  /* Lining figures that share one width, so 125 and 130 stack in a column. This is a
+     log of numbers; alignment is the whole job. Coach prose opts back out below. */
+  font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
 }
 #root { min-height: 100dvh; }
-h1, h2, h3, h4 { margin: 0; line-height: 1.2; letter-spacing: -0.01em; }
-h1 { font-size: 1.75rem; font-weight: 800; }
-h2 { font-size: 1.25rem; font-weight: 700; }
-h3 { font-size: 1rem; font-weight: 600; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.2; text-wrap: balance; }
+h1 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.022em; }
+h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; }
+h3 { font-size: 1rem; font-weight: 600; letter-spacing: -0.008em; }
 p { margin: 0; }
 a { color: inherit; text-decoration: none; }
 img, video { max-width: 100%; display: block; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+/* No border-radius here: that would reshape the element itself. Browsers already
+   follow each element's own corners when drawing the ring. */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 ::selection { background: var(--accent); color: var(--accent-fg); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 10px; border: 2px solid var(--bg); }
@@ -45,10 +47,16 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 10px 16px; border-radius: var(--radius); border: 1px solid var(--border-strong);
   background: var(--surface-2); color: var(--text); font-weight: 600; font-size: 0.925rem;
-  transition: background 0.15s, border-color 0.15s, transform 0.05s, opacity 0.15s; white-space: nowrap;
+  white-space: nowrap; touch-action: manipulation;
+  transition: background var(--dur-1) var(--ease-out), border-color var(--dur-1) var(--ease-out),
+              color var(--dur-1) var(--ease-out), opacity var(--dur-1) var(--ease-out),
+              transform var(--dur-2) var(--ease-out);
 }
 .btn:hover:not(:disabled) { background: var(--surface-3); border-color: var(--muted); }
-.btn:active:not(:disabled) { transform: translateY(1px); }
+/* Press reads as the button taking the force, so it scales rather than dropping.
+   Going down is near-instant and springs back over the longer transition above —
+   asymmetry is what makes a press feel physical instead of animated. */
+.btn:active:not(:disabled) { transform: scale(0.97); transition-duration: 40ms; }
 .btn-primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
 .btn-primary:hover:not(:disabled) { background: var(--accent-600); border-color: var(--accent-600); }
 .btn-ghost { background: transparent; border-color: transparent; color: var(--text-2); }
@@ -65,8 +73,10 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
 .field .error-text { font-size: 0.78rem; color: var(--danger); }
 .input, .select, .textarea {
   width: 100%; padding: 10px 12px; border-radius: var(--radius); border: 1px solid var(--border-strong);
-  background: var(--bg-elev); color: var(--text); transition: border-color 0.15s, box-shadow 0.15s;
+  background: var(--bg-elev); color: var(--text);
+  transition: border-color var(--dur-1) var(--ease-out), box-shadow var(--dur-1) var(--ease-out);
 }
+.input:hover:not(:focus), .select:hover:not(:focus), .textarea:hover:not(:focus) { border-color: var(--muted); }
 .input::placeholder, .textarea::placeholder { color: var(--muted); }
 .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .input.invalid, .select.invalid { border-color: var(--danger); }
@@ -78,8 +88,10 @@ input[type="date"].input { color-scheme: dark; }
 input[type="number"].input { -moz-appearance: textfield; }
 
 .tag {
+  /* Sentence case, not caps. These hold real words — muscle groups, equipment — and
+     caps makes them harder to scan while adding a shoutiness the data doesn't have. */
   display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--radius-pill);
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase;
+  font-size: 0.78rem; font-weight: 500;
   background: var(--surface-3); color: var(--text-2); border: 1px solid var(--border);
 }
 .tag.accent { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
@@ -123,12 +135,23 @@ input[type="number"].input { -moz-appearance: textfield; }
 .spinner.lg { width: 36px; height: 36px; border-width: 3px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .center { display: flex; align-items: center; justify-content: center; }
-.fade-in { animation: fade 0.25s ease-out; }
-@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.fade-in { animation: fade var(--dur-2) var(--ease-out); }
+@keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
 @media (max-width: 768px) {
   .page { padding: var(--space-4) var(--space-4) calc(var(--space-7) + 64px); }
   .grid-2 { grid-template-columns: 1fr; }
   h1 { font-size: 1.45rem; }
+}
+
+/* Covers every animation in the app at once — the spinner and shimmer keep a single
+   frame so loading states stay legible rather than disappearing. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
