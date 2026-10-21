@@ -58,7 +58,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
    asymmetry is what makes a press feel physical instead of animated. */
 .btn:active:not(:disabled) { transform: scale(0.97); transition-duration: 40ms; }
 .btn-primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-.btn-primary:hover:not(:disabled) { background: var(--accent-600); border-color: var(--accent-600); }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
 .btn-ghost { background: transparent; border-color: transparent; color: var(--text-2); }
 .btn-ghost:hover:not(:disabled) { background: var(--surface-2); color: var(--text); border-color: transparent; }
 .btn-danger { background: var(--danger-soft); color: var(--danger); border-color: transparent; }

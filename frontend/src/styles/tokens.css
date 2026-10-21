@@ -9,12 +9,14 @@
   --text: #e8eef5;
   --text-2: #aab7c7;
   --muted: #7d8b9d;
-  /* Chalk. Colour in this app carries meaning — red is danger, green is success,
-     blue is the coach — so the accent stays neutral and never competes with them. */
-  --accent: #eef2f7;
-  --accent-600: #d6dde6;
+  /* Bronze: loaded plates and old iron. A dark label rides on it, not a white one —
+     white on this value is 3.46:1 and fails AA, while near-black is 5.56:1. */
+  --accent: #c0794a;
+  /* Hover goes lighter, not darker. Darkening to #a66439 would drop the button label
+     to 4.12:1, and on a dark interface brightening on touch is the natural direction. */
+  --accent-hover: #cf8a5c;
   --accent-fg: #0b0f14;
-  --accent-soft: rgba(238, 242, 247, 0.10);
+  --accent-soft: rgba(192, 121, 74, 0.14);
   --info: #60a5fa;
   --info-soft: rgba(96, 165, 250, 0.14);
   --danger: #f87171;
