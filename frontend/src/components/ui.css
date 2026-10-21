@@ -6,8 +6,16 @@
 .modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 0 20px 18px; }
 
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-/* Flat tint, not a gradient: the accent marks this number as notable, it is not scenery. */
-.stat-card.accent { background: var(--accent-soft); border-color: rgba(200, 241, 53, 0.28); }
+/* The highlighted card keeps its fade: this gradient is not decoration, it marks the
+   one number that leads the dashboard, and the falloff gives it depth the flat tint
+   lost. Mixed from --accent so it follows the accent rather than pinning a hex. */
+.stat-card.accent {
+  background: var(--accent-soft);
+  background: linear-gradient(135deg,
+              color-mix(in srgb, var(--accent) 18%, transparent),
+              color-mix(in srgb, var(--accent) 4%, transparent));
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
 .stat-top { display: flex; justify-content: space-between; align-items: center; }
 .stat-label { font-size: 0.82rem; font-weight: 500; color: var(--muted); }
 /* Reserve the accent for the card that is actually highlighted; elsewhere the icon

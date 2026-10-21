@@ -6,4 +6,11 @@ export const TOOLTIP_STYLE = {
   itemStyle: { color: '#e8eef5' },
   cursor: { fill: 'rgba(255,255,255,0.04)' },
 }
-export const COLORS = ['#c8f135', '#60a5fa', '#f472b6', '#fbbf24', '#34d399', '#a78bfa', '#fb923c', '#22d3ee']
+// Mirrors --chart-1..8 in tokens.css. Kept in JS because recharts takes colours as
+// SVG attributes, where CSS custom properties are not reliably resolved.
+export const COLORS = ['#60a5fa', '#f472b6', '#fbbf24', '#34d399', '#a78bfa', '#fb923c', '#22d3ee', '#94a3b8']
+/** Primary series colour: one exercise, one metric over time. */
+export const SERIES = COLORS[0]
+/** Derived series (estimated 1RM): slate, so a calculated line stays visibly
+ *  subordinate to measured data rather than reading as a second real metric. */
+export const SERIES_EST = COLORS[7]

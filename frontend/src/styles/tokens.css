@@ -9,10 +9,12 @@
   --text: #e8eef5;
   --text-2: #aab7c7;
   --muted: #7d8b9d;
-  --accent: #c8f135;
-  --accent-600: #a9d21c;
+  /* Chalk. Colour in this app carries meaning — red is danger, green is success,
+     blue is the coach — so the accent stays neutral and never competes with them. */
+  --accent: #eef2f7;
+  --accent-600: #d6dde6;
   --accent-fg: #0b0f14;
-  --accent-soft: rgba(200, 241, 53, 0.12);
+  --accent-soft: rgba(238, 242, 247, 0.10);
   --info: #60a5fa;
   --info-soft: rgba(96, 165, 250, 0.14);
   --danger: #f87171;
@@ -56,12 +58,12 @@
   --space-6: 32px;
   --space-7: 48px;
 
-  --chart-1: #c8f135;
-  --chart-2: #60a5fa;
-  --chart-3: #f472b6;
-  --chart-4: #fbbf24;
-  --chart-5: #34d399;
-  --chart-6: #a78bfa;
-  --chart-7: #fb923c;
-  --chart-8: #22d3ee;
+  --chart-1: #60a5fa;
+  --chart-2: #f472b6;
+  --chart-3: #fbbf24;
+  --chart-4: #34d399;
+  --chart-5: #a78bfa;
+  --chart-6: #fb923c;
+  --chart-7: #22d3ee;
+  --chart-8: #94a3b8;
 }

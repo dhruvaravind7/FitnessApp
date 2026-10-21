@@ -11,7 +11,7 @@
 .results-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; min-height: 28px; }
 .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 .chip-btn { cursor: pointer; }
-.chip-btn:hover { background: rgba(200,241,53,0.25); }
+.chip-btn:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
 
 .drawer-backdrop { position: fixed; inset: 0; background: rgba(4,7,11,0.7); z-index: 60; display: flex; justify-content: flex-end; }
 .drawer { width: min(360px, 92vw); height: 100%; border-radius: 0; display: flex; flex-direction: column; gap: 14px; overflow: auto; animation: slide-in var(--dur-3) var(--ease-out); }
