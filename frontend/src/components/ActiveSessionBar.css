@@ -1,5 +1,9 @@
 .active-bar { position: sticky; top: 0; z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 24px;
-  background: linear-gradient(90deg, rgba(200,241,53,0.16), rgba(200,241,53,0.06)); border-bottom: 1px solid rgba(200,241,53,0.3); backdrop-filter: blur(10px); }
+  background: linear-gradient(90deg,
+              color-mix(in srgb, var(--accent) 14%, transparent),
+              color-mix(in srgb, var(--accent) 5%, transparent));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  backdrop-filter: blur(10px); }
 .active-bar-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .active-bar-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .active-bar-meta { color: var(--text-2); font-size: 0.85rem; white-space: nowrap; }

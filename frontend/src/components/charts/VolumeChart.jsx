@@ -1,7 +1,7 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useUnit } from '../../context/UnitContext'
 import { compactNumber, formatDate } from '../../lib/format'
-import { AXIS, GRID, TOOLTIP_STYLE } from './chartTheme'
+import { AXIS, GRID, SERIES, TOOLTIP_STYLE } from './chartTheme'
 
 /** Weekly training volume (8 Monday-based buckets). */
 export default function VolumeChart({ weeks = [] }) {
@@ -16,7 +16,7 @@ export default function VolumeChart({ weeks = [] }) {
           <XAxis dataKey="label" {...AXIS} />
           <YAxis {...AXIS} tickFormatter={compactNumber} width={56} domain={empty ? [0, 1000] : undefined} />
           <Tooltip {...TOOLTIP_STYLE} formatter={(v, _n, p) => [`${compactNumber(v)} ${unit.unit} · ${p.payload.sessions} session${p.payload.sessions === 1 ? '' : 's'}`, 'Volume']} />
-          <Bar dataKey="value" fill="#c8f135" radius={[6, 6, 0, 0]} maxBarSize={48} />
+          <Bar dataKey="value" fill={SERIES} radius={[6, 6, 0, 0]} maxBarSize={48} />
         </BarChart>
       </ResponsiveContainer>
     </div>

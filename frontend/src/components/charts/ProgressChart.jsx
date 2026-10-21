@@ -1,7 +1,7 @@
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useUnit } from '../../context/UnitContext'
 import { formatDate } from '../../lib/format'
-import { AXIS, GRID, TOOLTIP_STYLE } from './chartTheme'
+import { AXIS, GRID, SERIES, SERIES_EST, TOOLTIP_STYLE } from './chartTheme'
 
 /** Per-date max weight and estimated 1RM for one exercise. */
 export default function ProgressChart({ points = [] }) {
@@ -22,7 +22,7 @@ export default function ProgressChart({ points = [] }) {
             <XAxis dataKey="label" {...AXIS} />
             <YAxis {...AXIS} allowDecimals={false} />
             <Tooltip {...TOOLTIP_STYLE} />
-            <Line type="monotone" dataKey="reps" name="Max reps" stroke="#c8f135" strokeWidth={2.5} dot={{ r: 4 }} />
+            <Line type="monotone" dataKey="reps" name="Max reps" stroke={SERIES} strokeWidth={2.5} dot={{ r: 4 }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -37,8 +37,8 @@ export default function ProgressChart({ points = [] }) {
           <YAxis {...AXIS} domain={['auto', 'auto']} width={48} />
           <Tooltip {...TOOLTIP_STYLE} formatter={(v, name) => [`${v} ${unit.unit}`, name]} />
           <Legend wrapperStyle={{ fontSize: 12, color: '#aab7c7' }} />
-          <Line type="monotone" dataKey="weight" name="Top weight" stroke="#c8f135" strokeWidth={2.5} dot={{ r: 4 }} connectNulls />
-          <Line type="monotone" dataKey="e1rm" name="Est. 1RM" stroke="#60a5fa" strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls />
+          <Line type="monotone" dataKey="weight" name="Top weight" stroke={SERIES} strokeWidth={2.5} dot={{ r: 4 }} connectNulls />
+          <Line type="monotone" dataKey="e1rm" name="Est. 1RM" stroke={SERIES_EST} strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls />
         </LineChart>
       </ResponsiveContainer>
     </div>

@@ -1,5 +1,5 @@
 .session-card { padding: 12px 14px; }
-.session-card.active { border-color: rgba(200,241,53,0.4); }
+.session-card.active { border-color: color-mix(in srgb, var(--accent) 38%, transparent); }
 .session-head { display: flex; align-items: center; gap: 10px; }
 .session-toggle { border: 0; background: transparent; color: var(--muted); display: inline-flex; padding: 6px; border-radius: 8px; }
 .session-toggle:hover { background: var(--surface-2); color: var(--text); }
