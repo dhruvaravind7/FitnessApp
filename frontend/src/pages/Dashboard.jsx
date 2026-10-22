@@ -91,26 +91,27 @@ export default function Dashboard() {
             <StatCard label="Last workout" value={o.last_session ? friendlyDate(o.last_session.date) : '–'} sub={o.last_session ? `${o.last_session.name || 'Workout'} · ${o.last_session.exercise_count} exercises` : 'No sessions yet'} icon={Trophy} />
           </div>
 
-          <div className="dash-grid">
-            <section className="card">
-              <div className="card-title"><h2>Weekly volume</h2><span className="muted small">last 8 weeks · {unit.unit}</span></div>
-              <VolumeChart weeks={o.weekly_volume} />
-            </section>
-            <section className="card">
-              <div className="card-title"><h2>Muscle balance</h2><span className="muted small">sets · 30 days</span></div>
-              <MuscleBreakdown items={muscles.target_muscles} />
-            </section>
-          </div>
-
-          <div className="dash-grid">
-            <section className="card">
-              <div className="card-title"><h2>Recent sessions</h2><Link to="/history" className="btn btn-ghost btn-sm">All history <ArrowRight size={14} /></Link></div>
-              <div className="stack" style={{ gap: 10 }}>
-                {sessions.length === 0 ? <p className="muted small">No finished sessions yet.</p> : sessions.map((s) => <SessionCard key={s.id} session={s} />)}
-              </div>
-            </section>
-            <div className="stack" style={{ gap: 20 }}>
-              <section className="card">
+          {/* Two independent columns, so a short card never leaves a gap under it. Below 1100px the
+              columns dissolve (display: contents) and `order` restores the reading order. */}
+          <div className="dash-cols">
+            <div className="dash-col">
+              <section className="card dash-volume">
+                <div className="card-title"><h2>Weekly volume</h2><span className="muted small">last 8 weeks · {unit.unit}</span></div>
+                <VolumeChart weeks={o.weekly_volume} />
+              </section>
+              <section className="card dash-recent">
+                <div className="card-title"><h2>Recent sessions</h2><Link to="/history" className="btn btn-ghost btn-sm">All history <ArrowRight size={14} /></Link></div>
+                <div className="stack" style={{ gap: 10 }}>
+                  {sessions.length === 0 ? <p className="muted small">No finished sessions yet.</p> : sessions.map((s) => <SessionCard key={s.id} session={s} />)}
+                </div>
+              </section>
+            </div>
+            <div className="dash-col">
+              <section className="card dash-muscles">
+                <div className="card-title"><h2>Muscle balance</h2><span className="muted small">sets · 30 days</span></div>
+                <MuscleBreakdown items={muscles.target_muscles} />
+              </section>
+              <section className="card dash-records">
                 <div className="card-title"><h2>Personal records</h2></div>
                 {records.length === 0 ? <p className="muted small">Records appear once you log weighted exercises.</p> : (
                   <div className="records">
@@ -123,7 +124,7 @@ export default function Dashboard() {
                   </div>
                 )}
               </section>
-              <section className="card">
+              <section className="card dash-again">
                 <div className="card-title"><h2>Log again</h2></div>
                 {recent.length === 0 ? <p className="muted small">Recently logged exercises show up here for quick access.</p> : (
                   <div className="tag-row">
@@ -131,7 +132,7 @@ export default function Dashboard() {
                   </div>
                 )}
               </section>
-              <Link to="/coach" className="coach-cta card">
+              <Link to="/coach" className="coach-cta card dash-coach">
                 <MessageSquareHeart size={22} />
                 <div>
                   <strong>Ask your coach</strong>
