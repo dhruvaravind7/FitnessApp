@@ -155,7 +155,7 @@ export default function Coach() {
         </div>
 
         <form className="composer" onSubmit={(e) => { e.preventDefault(); send() }}>
-          <textarea ref={inputRef} className="composer-input" rows={1} placeholder="Ask about your training… (Enter to send, Shift+Enter for a new line)"
+          <textarea ref={inputRef} className="composer-input" rows={1} placeholder="Ask about your training…"
             value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={onKeyDown} disabled={sending} maxLength={8000}
             onInput={(e) => { e.target.style.height = 'auto'; e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px` }} />
           <button type="submit" className="btn btn-primary btn-icon send-btn" disabled={!draft.trim() || sending} aria-label="Send"><ArrowUp size={18} /></button>
